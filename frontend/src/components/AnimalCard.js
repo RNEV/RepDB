@@ -14,7 +14,7 @@ const AnimalDetails = ({ animal, index }) => {
       dispatch({ type: 'DELETE_ANIMAL', payload: json });
     }
   };
-  const { title, breeder, price, sex, year } = animal;
+  const { title, breeder, price, sex, year, weight } = animal;
 
   return (
     <Card shadow='sm' p='lg' radius='md' withBorder>
@@ -44,6 +44,9 @@ const AnimalDetails = ({ animal, index }) => {
         {year
           ? `${new Date(year).getMonth()}/${new Date(year).getFullYear().toString().substr(-2)}`
           : 'null'}
+      </Text>
+      <Text size='sm' color='dimmed'>
+        {weight}
       </Text>
       <Button onClick={handleClick}>delete</Button>
     </Card>

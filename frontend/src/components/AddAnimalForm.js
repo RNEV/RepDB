@@ -1,9 +1,8 @@
-import { Button, TextInput, NumberInput, Select, Text, Container, Title } from '@mantine/core';
-import { MonthPicker } from 'mantine-dates-6';
+import { Button, TextInput, NumberInput, Select, Container, Title } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import React, { useState } from 'react';
+import MorphDropDown from './MorphDropDown';
 import { useAnimalsContext } from '../hooks/useAnimalsContext';
-
 
 const AddAnimalForm = () => {
   const { dispatch } = useAnimalsContext();
@@ -12,12 +11,13 @@ const AddAnimalForm = () => {
   const [price, setPrice] = useState(null);
   const [sex, setSex] = useState('');
   const [year, setYear] = useState(new Date());
+  const [weight, setWeight] = useState(null);
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const animal = { title, breeder, price, sex, year };
+    const animal = { title, breeder, price, sex, year, weight };
 
     const response = await fetch('/api/animal', {
       method: 'POST',
@@ -38,6 +38,7 @@ const AddAnimalForm = () => {
       setPrice(null);
       setSex('');
       setYear(new Date());
+      setWeight(null);
       setError(null);
       console.log('New Animal Added', json);
       //add to global context state
@@ -48,6 +49,7 @@ const AddAnimalForm = () => {
   return (
     <Container size={420} my={40}>
       <form onSubmit={handleSubmit}>
+        {/* <MorphDropDown /> */}
         <Title
           align='center'
           sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
@@ -55,7 +57,16 @@ const AddAnimalForm = () => {
           Add Animal
         </Title>
         <TextInput label='Title' onChange={(e) => setTitle(e.target.value)} value={title} />
-        <TextInput label='Breeder' onChange={(e) => setBreeder(e.target.value)} value={breeder} />
+        {/* <TextInput label='Breeder' onChange={(e) => setBreeder(e.target.value)} value={breeder} /> */}
+        <NumberInput
+          label='Weight'
+          parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+          formatter={(value) =>
+            !Number.isNaN(parseFloat(value)) ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
+          }
+          onChange={setWeight}
+          value={weight}
+        />
         <NumberInput
           label='Price'
           parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
